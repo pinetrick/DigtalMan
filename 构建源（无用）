@@ -1,0 +1,44 @@
+https://github.com/duixcom/Duix.Heygem
+
+
+
+
+docker commit heygem-gen-video pinetrick/people:raw
+docker push pinetrick/people:raw
+
+
+
+
+docker run -it \
+  --name people \
+  --gpus '"device=0"' \
+  -p 8383:8383 \
+  pinetrick/people:raw \
+  /bin/bash
+
+
+docker exec -it people /bin/bash
+
+
+cd /
+git clone https://github.com/pinetrick/DigtalMan
+cp -f /DigtalMan/app_local.py /code/app_local.py
+python /code/app_local.py
+
+
+
+docker commit people pinetrick/people:v1
+docker push pinetrick/people:v1
+
+
+
+docker run -it \
+  --name people \
+  --restart=always \
+  --gpus '"device=0"' \
+  -p 8383:8383 \
+  pinetrick/people:v1 \
+  /bin/bash -c "python /code/app_local.py & exec bash"
+
+
+
