@@ -13,3 +13,5 @@ docker run -it \
 Usage: 
 <img width="1195" height="452" alt="image" src="https://github.com/user-attachments/assets/442050fc-02c1-42c1-8c6a-2bcae295f9cb" />
 <img width="1215" height="399" alt="image" src="https://github.com/user-attachments/assets/4257cdc3-e48b-41b6-828a-99cb3e34e0d5" />
+result download from 
+http://xxxx:8383/files/temp/...
