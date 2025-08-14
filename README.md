@@ -1,4 +1,5 @@
 Easy start:
+```
 docker run -it \
   --name people \
   --restart=always \
@@ -6,7 +7,7 @@ docker run -it \
   -p 8383:8383 \
   pinetrick/people:v1 \
   /bin/bash -c "python /code/app_local.py & exec bash"
-
+```
 
 
 
