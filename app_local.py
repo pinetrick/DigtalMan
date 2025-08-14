@@ -18,14 +18,51 @@ from service.self_logger import logger
 from flask import Flask, request
 from service.config import *
 from service.trans_dh_service import TransDhTask, Status,a, init_p, get_run_flag, task_dic
+from flask import send_from_directory, abort
 
 import json
 import threading
 import gc
 import cv2
+import os
 
 app = Flask(__name__)
 
+
+
+
+BASE_DIR = '/code/data'
+
+# 列出文件和子目录
+@app.route('/files', defaults={'req_path': ''})
+@app.route('/files/<path:req_path>')
+def list_and_download(req_path):
+    abs_path = os.path.join(BASE_DIR, req_path)
+
+    # 路径不存在
+    if not os.path.exists(abs_path):
+        return json.dumps(
+            EasyResponse(ResponseCode.error1.value[0], False, f'路径不存在: {req_path}', {}),
+            default=lambda obj: obj.__dict__,
+            sort_keys=True, ensure_ascii=False,
+            indent=4
+        )
+
+    # 如果是文件 -> 直接下载
+    if os.path.isfile(abs_path):
+        return send_from_directory(os.path.dirname(abs_path), os.path.basename(abs_path), as_attachment=True)
+
+    # 如果是目录 -> 列出目录内容
+    files = os.listdir(abs_path)
+    file_list = []
+    for f in files:
+        file_path = os.path.join(req_path, f)
+        if os.path.isdir(os.path.join(BASE_DIR, file_path)):
+            file_list.append({'name': f + '/', 'type': 'dir', 'path': file_path})
+        else:
+            file_list.append({'name': f, 'type': 'file', 'path': file_path})
+
+    return json.dumps(file_list, ensure_ascii=False, indent=4)
 
 class EasyResponse:
     def __init__(
